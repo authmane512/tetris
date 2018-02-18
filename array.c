@@ -4,7 +4,7 @@
 
 #include "array.h"
 
-long min(TYPE *arr, long len) {
+long min(int *arr, long len) {
 	long i;
 	long n = arr[0];
 
@@ -15,7 +15,7 @@ long min(TYPE *arr, long len) {
 	return n;
 }
 
-long max(TYPE *arr, long len) {
+long max(int *arr, long len) {
     long i;
     long n = arr[0];
 
@@ -26,7 +26,7 @@ long max(TYPE *arr, long len) {
     return n;
 }
 
-long sum(TYPE *arr, long len) {
+long sum(int *arr, long len) {
 	long i;
 	long s = 0;
 
@@ -36,15 +36,15 @@ long sum(TYPE *arr, long len) {
 	return s;
 }
 
-void rotate(TYPE **matrix, long rows, long cols) {
-    TYPE **tmp;
+void rotate(int **matrix, long rows, long cols) {
+    int **tmp;
     long i;
     long j;
-    TYPE n;
+    int n;
 
-    tmp = (TYPE **)malloc(rows * sizeof(TYPE *));
+    tmp = (int **)malloc(rows * sizeof(int *));
     for (i = 0; i < rows; i++) {
-        tmp[i] = (TYPE *)malloc(cols * sizeof(TYPE));
+        tmp[i] = (int *)malloc(cols * sizeof(int));
     }
 
     for (i = 0; i < rows; i++) {
@@ -55,7 +55,7 @@ void rotate(TYPE **matrix, long rows, long cols) {
     }
 
     for (i = 0; i < rows; i++) {
-        memcpy(matrix[i], tmp[i], cols * sizeof(TYPE));
+        memcpy(matrix[i], tmp[i], cols * sizeof(int));
     }
 
     for (i = 0; i < rows; i++) {
@@ -64,7 +64,7 @@ void rotate(TYPE **matrix, long rows, long cols) {
     free(tmp);
 }
 
-void printArr(TYPE *arr, long len) {
+void printArr(int *arr, long len) {
     long i;
     
     fprintf(stderr, "\narray:\n");
@@ -74,45 +74,45 @@ void printArr(TYPE *arr, long len) {
     fprintf(stderr, "[end]\n\n");
 }
 
-void printMatrix(TYPE **matrix, long rows, long cols) {
+void printMatrix(int **matrix, long rows, long cols) {
     int i;
     int j;
     fprintf(stderr, "\nmatrix:\n");
     for (i = 0; i < rows; i++) {
         for (j = 0; j < cols; j++) {
-            fprintf(stderr, "%lli", matrix[i][j]);
+            fprintf(stderr, "%i", matrix[i][j]);
         }
         fprintf(stderr, "\n");
     }
     fprintf(stderr, "[end]\n\n");
 }
 
-long readArr(TYPE *arr) {
+long readArr(int *arr) {
     long len;
     long i;
     
     scanf("%li", &len);
     for (i = 0; i < len; i++) {
-        scanf("%lli", &arr[i]);
+        scanf("%i", &arr[i]);
     }
     
     return len;
 }
 
 int cmp(const void *x, const void *y) {
-    return *(TYPE *)x - *(TYPE *)y;
+    return *(int *)x - *(int *)y;
 }
 
 int rcmp(const void *x, const void *y) {
-    return *(TYPE *)y - *(TYPE *)x;
+    return *(int *)y - *(int *)x;
 }
 
-void sort(TYPE *arr, long len, int reverse) {
-    qsort(arr, len, sizeof(TYPE), (reverse) ? rcmp : cmp);
+void sort(int *arr, long len, int reverse) {
+    qsort(arr, len, sizeof(int), (reverse) ? rcmp : cmp);
 }
 
-void reverseArr(TYPE *arr, long len) {
-    TYPE *tmp = (TYPE *)malloc(len * sizeof(TYPE));
+void reverseArr(int *arr, long len) {
+    int *tmp = (int *)malloc(len * sizeof(int));
     long i;
 
     if (tmp == NULL)
@@ -122,6 +122,6 @@ void reverseArr(TYPE *arr, long len) {
         tmp[len - i - 1] = arr[i];
     }
 
-    memcpy(arr, tmp, len * sizeof(TYPE));
+    memcpy(arr, tmp, len * sizeof(int));
     free(tmp);
 }
