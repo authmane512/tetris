@@ -5,7 +5,7 @@
 
 #include "various.h"
 
-/*enum {LITTLE_ENDIAN, BIG_ENDIAN};*/
+enum {LITTLE_ENDIAN, BIG_ENDIAN};
 
 long rnd(double n)
 {

@@ -72,11 +72,11 @@ struct blk {
     char mat[4][4];
     int row;
     int col;
+    int printed;
 };
 
 struct blk curBlk;
 char board[HEIGHT][WIDTH] = { 0 };
-int noCurBlk = 1;
 long score = 0;
 SDL_Texture *BLK;
 SDL_Renderer *renderer;
@@ -190,7 +190,7 @@ int randBlk(void) {
     }
     memcpy(curBlk.mat, newBlk, 4 * 4 * sizeof(char));
 
-    noCurBlk = 0;
+    curBlk.printed = 0;
 
     if (! canPrint(curBlk.mat, curBlk.row, curBlk.col)) { /* game over! */
         return 1;
@@ -221,13 +221,13 @@ int downBlk(void) {
     curBlk.row++;
     if (! canPrint(curBlk.mat, curBlk.row + 1, curBlk.col)) {
         printBlk(curBlk.mat, curBlk.row, curBlk.col);
-        noCurBlk = 1;
+        curBlk.printed = 1;
     }
     return 0;
 }
 
 void fullDownBlk(void) {
-    while (noCurBlk != 1)
+    while (curBlk.printed != 1)
         downBlk();
 }
 
@@ -256,7 +256,6 @@ void clear(void) {
 void removeLine(int row) {
     int i;
     int j;
-    char newBoard[HEIGHT][WIDTH] = { 0 };
 
     for (i = 0; i < row; i++) {
         for (j = 0; j < WIDTH; j++) {
@@ -340,7 +339,7 @@ int game(void) {
                 removeLine(i);
         }
 
-        if (noCurBlk) {
+        if (curBlk.printed == 1) {
             if (randBlk() != 0) {
                 gameOver = 1;
                 quit = 1;
@@ -363,35 +362,36 @@ int game(void) {
     return 0;
 }
 
-int main(int argc, char* argv[]) {
-    int state = 1;
-    SDL_Surface *tmpBlk = NULL;
-    SDL_Window *window;
-
-    srand(time(NULL));
-
-    /* ======================================================== */
+int init(SDL_Window *window) {
     if (SDL_Init(SDL_INIT_EVENTS) != 0) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL init error", SDL_GetError(), NULL);
-        goto Quit;
+        return 1;
     }
 
     if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN, &window, &renderer) < 0) {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "make window error", SDL_GetError(), NULL);
-        goto Quit;
+        return 1;
     }
 
     BLK = loadBlk(renderer);
     if (BLK == NULL) {
-        goto Quit;
+        return 1;
     }
-    /* ======================================================== */
 
-    game();
+    return 0;
+}
 
-    state = 0;
+int main(int argc, char* argv[]) {
+    SDL_Window *window = NULL;
+    int error_occured;
 
-Quit:
+    srand(time(NULL));
+
+    error_occured = init(window);
+
+    if (error_occured == 0)
+        game();
+
     if (renderer != NULL) {
         SDL_DestroyRenderer(renderer);
     }
@@ -399,5 +399,5 @@ Quit:
         SDL_DestroyWindow(window);
     }
     SDL_Quit();
-    return state;
+    return error_occured;
 }
