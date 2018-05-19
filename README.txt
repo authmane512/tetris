@@ -1,4 +1,4 @@
-Hello Gnu Generation! Thanks for testing my program!
+Hello! Thanks for testing my program!
 
 To compile it, you need SDL2 which you can install like that on Debian:
 sudo apt-get install libsdl2-dev

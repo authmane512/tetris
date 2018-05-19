@@ -4,12 +4,13 @@
 
 CC = gcc
 CFLAGS = -lm -Wall -Wextra -pedantic -fno-common -fno-builtin -std=c89
+SDL2FLAGS = $(shell sdl2-config --cflags --libs)
 
 all: main.o events.o load_graphics.o array.o various.o
-	$(CC) -lm `sdl2-config --cflags --libs` main.o events.o load_graphics.o array.o various.o -o tetris
+	$(CC) -lm $(SDL2FLAGS) main.o events.o load_graphics.o array.o various.o -o tetris
 
 main.o: main.c main.h sdl.h events.h load_graphics.h array.h various.h
-	$(CC) $(CFLAGS) -c `sdl2-config --cflags --libs` main.c -o main.o
+	$(CC) $(CFLAGS) -c $(SDL2FLAGS) main.c -o main.o
 
 events.o: main.h sdl.h platforms/desktop/events.c
 	$(CC) $(CFLAGS) -c platforms/desktop/events.c -o events.o
