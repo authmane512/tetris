@@ -1,10 +1,21 @@
-Hello! Thanks for testing my program!
+Hello!
 
-To compile it, you need SDL2 which you can install like that on Debian:
-sudo apt-get install libsdl2-dev
+This project is simple implementation of the Tetris famous game. 
+I've made it mainly for learning purpose. I don't think that you
+will find pleasure playing with it, but if you are developer, you
+can read the source code which is documented. Hope that it'll allow
+you to learn things.
 
-Then you can compile the code like that:
-make
+To install this program on Linux, first download it:
+```git clone https://github.com/authmane512/tetris.git
+cd tetris
+```
 
-And finally start the program like that:
-./tetris
+Before compile it, you need SDL2 library which you can install like that on Debian:
+```sudo apt install libsdl2-dev```
+
+Then you can compile the code:
+```make```
+
+Finally start the program:
+```./tetris```
