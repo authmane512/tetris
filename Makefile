@@ -7,7 +7,7 @@ CFLAGS = -lm -Wall -Wextra -pedantic -fno-common -fno-builtin -std=c89
 SDL2FLAGS = $(shell sdl2-config --cflags --libs)
 
 all: main.o events.o load_graphics.o array.o various.o
-	$(CC) -lm $(SDL2FLAGS) main.o events.o load_graphics.o array.o various.o -o tetris
+	$(CC) main.o events.o load_graphics.o array.o various.o -o tetris -lm $(SDL2FLAGS)
 
 main.o: main.c main.h sdl.h events.h load_graphics.h array.h various.h
 	$(CC) $(CFLAGS) -c $(SDL2FLAGS) main.c -o main.o
