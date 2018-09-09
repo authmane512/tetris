@@ -1,8 +1,22 @@
+/**
+ * @file platforms/desktop/events.c
+ */
+
 #include <stdlib.h>
 
 #include "../../sdl.h"
 #include "../../main.h"
 
+/**
+ * @brief      Gets the actions of user
+ * 
+ * @details
+ * Actions of user are stored in @a actions global variable.
+ *
+ * @param      actions  The array of actions
+ *
+ * @return     The number of actions
+ */
 int getActions(int *actions) {
     SDL_Event event;
     int actionsNr = 0;

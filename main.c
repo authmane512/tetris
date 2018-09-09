@@ -1,6 +1,9 @@
 /**
  * @file main.c
- * @brief A tetris implementation in C
+ * @brief main part of the code
+ * 
+ * @details
+ * "ttm" is an abbreviation for "tetrimino".
  */
 
 #include <time.h>
@@ -21,7 +24,6 @@
 #define SCREEN_WIDTH BLK_SIZE * WIDTH
 #define TTM_WIDTH 4
 
-/* "ttm" is an abbreviation for "tetrimino" */
 char ITtm[][TTM_WIDTH] = {
     { 0, 0, 1, 0 },
     { 0, 0, 1, 0 },

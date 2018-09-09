@@ -1,9 +1,20 @@
+/**
+ * @file platforms/desktop/load_graphics.c
+ */
+
 #include <stdlib.h>
 
 #include "../../sdl.h"
 
 extern char **xpmBlk;
 
+/**
+ * @brief      Gets block texture
+ *
+ * @param      renderer  The SDL renderer
+ *
+ * @return     SDL texture of the red block
+ */
 SDL_Texture *loadBlk(SDL_Renderer *renderer) {
 	SDL_Surface *tmpBlk;
 	SDL_Texture *BLK;

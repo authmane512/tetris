@@ -1,3 +1,8 @@
+/**
+ * @file debugging.c
+ * @brief a lot of functions for debugging purpose
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
