@@ -7,15 +7,22 @@ can read the source code which is documented. Hope that it'll allow
 you to learn things.
 
 To install this program on Linux, first download it:
-```git clone https://github.com/authmane512/tetris.git
+```
+git clone https://github.com/authmane512/tetris.git
 cd tetris
 ```
 
 Before compile it, you need SDL2 library which you can install like that on Debian:
-```sudo apt install libsdl2-dev```
+```
+sudo apt install libsdl2-dev
+```
 
 Then you can compile the code:
-```make```
+```
+make
+```
 
 Finally start the program:
-```./tetris```
+```
+./tetris
+```
