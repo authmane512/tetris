@@ -17,54 +17,54 @@
 #define HEIGHT 18
 #define WIDTH 12
 #define BLK_SIZE 32
-
 #define SCREEN_HEIGHT BLK_SIZE * HEIGHT
 #define SCREEN_WIDTH BLK_SIZE * WIDTH
+#define TTM_WIDTH 4
 
 /* "ttm" is an abbreviation for "tetrimino" */
-char ITtm[][4] = {
+char ITtm[][TTM_WIDTH] = {
     { 0, 0, 1, 0 },
     { 0, 0, 1, 0 },
     { 0, 0, 1, 0 },
     { 0, 0, 1, 0 }
 };
 
-char LTtm[][4] = {
+char LTtm[][TTM_WIDTH] = {
     { 0, 0, 0, 0 },
     { 0, 1, 0, 0 },
     { 0, 1, 0, 0 },
     { 0, 1, 1, 0 }
 };
 
-char JTtm[][4] = {
+char JTtm[][TTM_WIDTH] = {
     { 0, 0, 0, 0 },
     { 0, 0, 1, 0 },
     { 0, 0, 1, 0 },
     { 0, 1, 1, 0 }
 };
 
-char TTtm[][4] = {
+char TTtm[][TTM_WIDTH] = {
     { 0, 0, 0, 0 },
     { 0, 1, 1, 1 },
     { 0, 0, 1, 0 },
     { 0, 0, 0, 0 }
 };
 
-char OTtm[][4] = {
+char OTtm[][TTM_WIDTH] = {
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     { 0, 1, 1, 0 },
     { 0, 1, 1, 0 }
 };
 
-char ZTtm[][4] = {
+char ZTtm[][TTM_WIDTH] = {
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     { 0, 1, 1, 0 },
     { 0, 0, 1, 1 }
 };
 
-char STtm[][4] = {
+char STtm[][TTM_WIDTH] = {
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     { 0, 1, 1, 0 },
@@ -75,7 +75,7 @@ SDL_Color white = { 255, 255, 255, 255 };
 SDL_Color black = { 0, 0, 0, 0 };
 
 struct ttm {
-    char mat[4][4];
+    char mat[TTM_WIDTH][TTM_WIDTH];
     int row;
     int col;
     int printed;
@@ -113,12 +113,12 @@ int setBackColor(SDL_Renderer *renderer, SDL_Color color)
 }
 
 /* this function return 1 if it's possible to print the tetrimino and 0 else */
-int canPrint(char mat[4][4], int row, int col) {
+int canPrint(char mat[TTM_WIDTH][TTM_WIDTH], int row, int col) {
     int i;
     int j;
 
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
+    for (i = 0; i < TTM_WIDTH; i++) {
+        for (j = 0; j < TTM_WIDTH; j++) {
             if (mat[i][j] && ( row+i > HEIGHT-1 || col+j > WIDTH-1 || col+j < 0)) { /* if outside board */
                 return 0;
             }
@@ -131,18 +131,18 @@ int canPrint(char mat[4][4], int row, int col) {
 }
 
 int rotateCur(void) {
-    char tmp[4][4];
+    char tmp[TTM_WIDTH][TTM_WIDTH];
     int i;
     int j;
     
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
+    for (i = 0; i < TTM_WIDTH; i++) {
+        for (j = 0; j < TTM_WIDTH; j++) {
             tmp[i][j] = curTtm.mat[3 - j][i];
         }
     }
 
     if (canPrint(tmp, curTtm.row, curTtm.col)) {
-        memcpy(curTtm.mat, tmp, 4 * 4 * sizeof(char));
+        memcpy(curTtm.mat, tmp, TTM_WIDTH * TTM_WIDTH * sizeof(char));
         return 0;
     }
     else {
@@ -164,10 +164,10 @@ int wholeLine (int row) {
 
 int randTtm(void) {
     int choice;
-    char (*newTtm)[4];
+    char (*newTtm)[TTM_WIDTH];
 
     curTtm.row = 0;
-    curTtm.col = 4;
+    curTtm.col = TTM_WIDTH;
 
     choice = rand() % 7;
     switch (choice)
@@ -194,7 +194,7 @@ int randTtm(void) {
             newTtm = ZTtm;
             break;
     }
-    memcpy(curTtm.mat, newTtm, 4 * 4 * sizeof(char));
+    memcpy(curTtm.mat, newTtm, TTM_WIDTH * TTM_WIDTH * sizeof(char));
 
     curTtm.printed = 0;
 
@@ -214,15 +214,15 @@ int randTtm(void) {
  *
  * @return     1 if it's not possible to print the ttm, 0 else
  */
-int printTtm(char mat[4][4], int row, int col) {
+int printTtm(char mat[TTM_WIDTH][TTM_WIDTH], int row, int col) {
     int i;
     int j;
 
     if (! canPrint(mat, row, col))
         return 1;
 
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
+    for (i = 0; i < TTM_WIDTH; i++) {
+        for (j = 0; j < TTM_WIDTH; j++) {
             if ((! board[row + i][col + j]) && mat[i][j]) {
                 board[row + i][col + j] = 1;
             }
@@ -302,8 +302,8 @@ void refreshScreen(void) {
         }
     }
 
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
+    for (i = 0; i < TTM_WIDTH; i++) {
+        for (j = 0; j < TTM_WIDTH; j++) {
             imgDst.x = BLK_SIZE * (curTtm.col + j);
             imgDst.y = BLK_SIZE * (curTtm.row + i);
             if (curTtm.mat[i][j]) {
