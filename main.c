@@ -10,7 +10,7 @@
 
 #include "main.h"
 #include "sdl.h"
-#include "array.h"
+#include "debugging.h"
 #include "events.h"
 #include "load_graphics.h"
 

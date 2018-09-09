@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "array.h"
+#include "debugging.h"
 
 long min(int *arr, long len) {
 	long i;
