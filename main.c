@@ -1,3 +1,8 @@
+/**
+ * @file main.c
+ * @brief A tetris implementation in C
+ */
+
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,49 +21,50 @@
 #define SCREEN_HEIGHT BLK_SIZE * HEIGHT
 #define SCREEN_WIDTH BLK_SIZE * WIDTH
 
-char IBlk[][4] = {
+/* "ttm" is an abbreviation for "tetrimino" */
+char ITtm[][4] = {
     { 0, 0, 1, 0 },
     { 0, 0, 1, 0 },
     { 0, 0, 1, 0 },
     { 0, 0, 1, 0 }
 };
 
-char LBlk[][4] = {
+char LTtm[][4] = {
     { 0, 0, 0, 0 },
     { 0, 1, 0, 0 },
     { 0, 1, 0, 0 },
     { 0, 1, 1, 0 }
 };
 
-char JBlk[][4] = {
+char JTtm[][4] = {
     { 0, 0, 0, 0 },
     { 0, 0, 1, 0 },
     { 0, 0, 1, 0 },
     { 0, 1, 1, 0 }
 };
 
-char TBlk[][4] = {
+char TTtm[][4] = {
     { 0, 0, 0, 0 },
     { 0, 1, 1, 1 },
     { 0, 0, 1, 0 },
     { 0, 0, 0, 0 }
 };
 
-char OBlk[][4] = {
+char OTtm[][4] = {
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     { 0, 1, 1, 0 },
     { 0, 1, 1, 0 }
 };
 
-char ZBlk[][4] = {
+char ZTtm[][4] = {
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     { 0, 1, 1, 0 },
     { 0, 0, 1, 1 }
 };
 
-char SBlk[][4] = {
+char STtm[][4] = {
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     { 0, 1, 1, 0 },
@@ -68,14 +74,14 @@ char SBlk[][4] = {
 SDL_Color white = { 255, 255, 255, 255 };
 SDL_Color black = { 0, 0, 0, 0 };
 
-struct blk {
+struct ttm {
     char mat[4][4];
     int row;
     int col;
     int printed;
 };
 
-struct blk curBlk;
+struct ttm curTtm;
 char board[HEIGHT][WIDTH] = { 0 };
 long score = 0;
 SDL_Texture *BLK;
@@ -106,7 +112,7 @@ int setBackColor(SDL_Renderer *renderer, SDL_Color color)
     return 0;  
 }
 
-/* this function return 1 if it's possible to print the blk and 0 else */
+/* this function return 1 if it's possible to print the tetrimino and 0 else */
 int canPrint(char mat[4][4], int row, int col) {
     int i;
     int j;
@@ -131,12 +137,12 @@ int rotateCur(void) {
     
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 4; j++) {
-            tmp[i][j] = curBlk.mat[3 - j][i];
+            tmp[i][j] = curTtm.mat[3 - j][i];
         }
     }
 
-    if (canPrint(tmp, curBlk.row, curBlk.col)) {
-        memcpy(curBlk.mat, tmp, 4 * 4 * sizeof(char));
+    if (canPrint(tmp, curTtm.row, curTtm.col)) {
+        memcpy(curTtm.mat, tmp, 4 * 4 * sizeof(char));
         return 0;
     }
     else {
@@ -156,50 +162,59 @@ int wholeLine (int row) {
     return 1;
 }
 
-int randBlk(void) {
+int randTtm(void) {
     int choice;
-    char (*newBlk)[4];
+    char (*newTtm)[4];
 
-    curBlk.row = 0;
-    curBlk.col = 4;
+    curTtm.row = 0;
+    curTtm.col = 4;
 
     choice = rand() % 7;
     switch (choice)
     {
         case 0:
-            newBlk = IBlk;
+            newTtm = ITtm;
             break;
         case 1:
-            newBlk = LBlk;
+            newTtm = LTtm;
             break;
         case 2:
-            newBlk = JBlk;
+            newTtm = JTtm;
             break;
         case 3:
-            newBlk = TBlk;
+            newTtm = TTtm;
             break;
         case 4:
-            newBlk = OBlk;
+            newTtm = OTtm;
             break;
         case 5:
-            newBlk = SBlk;
+            newTtm = STtm;
             break;
         case 6:
-            newBlk = ZBlk;
+            newTtm = ZTtm;
             break;
     }
-    memcpy(curBlk.mat, newBlk, 4 * 4 * sizeof(char));
+    memcpy(curTtm.mat, newTtm, 4 * 4 * sizeof(char));
 
-    curBlk.printed = 0;
+    curTtm.printed = 0;
 
-    if (! canPrint(curBlk.mat, curBlk.row, curBlk.col)) { /* game over! */
+    if (! canPrint(curTtm.mat, curTtm.row, curTtm.col)) { /* game over! */
         return 1;
     }
     return 0;
+
 }
 
-/* this function put a blk in the board */
-int printBlk(char mat[4][4], int row, int col) {
+/**
+ * @brief      put a tetrimino in board
+ *
+ * @param[in]  mat   The matrix of the ttm
+ * @param[in]  row   The row in board
+ * @param[in]  col   The col in board
+ *
+ * @return     1 if it's not possible to print the ttm, 0 else
+ */
+int printTtm(char mat[4][4], int row, int col) {
     int i;
     int j;
 
@@ -217,28 +232,28 @@ int printBlk(char mat[4][4], int row, int col) {
     return 0;
 }
 
-int downBlk(void) {
-    curBlk.row++;
-    if (! canPrint(curBlk.mat, curBlk.row + 1, curBlk.col)) {
-        printBlk(curBlk.mat, curBlk.row, curBlk.col);
-        curBlk.printed = 1;
+int downTtm(void) {
+    curTtm.row++;
+    if (! canPrint(curTtm.mat, curTtm.row + 1, curTtm.col)) {
+        printTtm(curTtm.mat, curTtm.row, curTtm.col);
+        curTtm.printed = 1;
     }
     return 0;
 }
 
-void fullDownBlk(void) {
-    while (curBlk.printed != 1)
-        downBlk();
+void fullDownTtm(void) {
+    while (curTtm.printed != 1)
+        downTtm();
 }
 
-void moveBlk(int sens) {
-    if (sens == LEFT) {
-        if (canPrint(curBlk.mat, curBlk.row, curBlk.col - 1))
-            curBlk.col--;
+void moveTtm(int direction) {
+    if (direction == LEFT) {
+        if (canPrint(curTtm.mat, curTtm.row, curTtm.col - 1))
+            curTtm.col--;
     }
-    else if (sens == RIGHT) {
-        if (canPrint(curBlk.mat, curBlk.row, curBlk.col + 1))
-            curBlk.col++;
+    else if (direction == RIGHT) {
+        if (canPrint(curTtm.mat, curTtm.row, curTtm.col + 1))
+            curTtm.col++;
     }
 }
 
@@ -266,6 +281,10 @@ void removeLine(int row) {
     score += 100;
 }
 
+/*
+@brief remove everything from sreen, refresh with content of \a board array,
+show curTtm (at right place)
+*/
 void refreshScreen(void) {
     int i;
     int j;
@@ -285,9 +304,9 @@ void refreshScreen(void) {
 
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 4; j++) {
-            imgDst.x = BLK_SIZE * (curBlk.col + j);
-            imgDst.y = BLK_SIZE * (curBlk.row + i);
-            if (curBlk.mat[i][j]) {
+            imgDst.x = BLK_SIZE * (curTtm.col + j);
+            imgDst.y = BLK_SIZE * (curTtm.row + i);
+            if (curTtm.mat[i][j]) {
                 SDL_RenderCopy(renderer, BLK, NULL, &imgDst);
             }
         }
@@ -305,7 +324,7 @@ int game(void) {
     int gameOver = 0;
     char msg[256];
 
-    randBlk();
+    randTtm();
 
     timer = 0;
     while (quit != 1) {
@@ -319,13 +338,13 @@ int game(void) {
                     rotateCur();
                     break;
                 case GO_DOWN:
-                    fullDownBlk();
+                    fullDownTtm();
                     break;
                 case GO_RIGHT:
-                    moveBlk(RIGHT);
+                    moveTtm(RIGHT);
                     break;
                 case GO_LEFT:
-                    moveBlk(LEFT);
+                    moveTtm(LEFT);
                     break;
                 case QUIT:
                     quit = 1;
@@ -339,8 +358,8 @@ int game(void) {
                 removeLine(i);
         }
 
-        if (curBlk.printed == 1) {
-            if (randBlk() != 0) {
+        if (curTtm.printed == 1) {
+            if (randTtm() != 0) {
                 gameOver = 1;
                 quit = 1;
             }
@@ -350,7 +369,7 @@ int game(void) {
         timer++;
         if (timer == 50) {
             timer = 0;
-            downBlk();
+            downTtm();
         }
     }
 
