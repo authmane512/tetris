@@ -74,6 +74,19 @@ char STtm[][TTM_WIDTH] = {
 SDL_Color white = { 255, 255, 255, 255 };
 SDL_Color black = { 0, 0, 0, 0 };
 
+/**
+ * @struct ttm
+ * @brief structure for tetriminos
+ * 
+ * @var ttm::mat
+ * The matrix of the tetrimino
+ * @var ttm::row
+ * The row of the tetrimino in the board
+ * @var ttm::col
+ * The column of the tetrimino in the board
+ * @var ttm::printed
+ * Equal to 1 if the tetrimino is full down and can no more be moved
+ */
 struct ttm {
     char mat[TTM_WIDTH][TTM_WIDTH];
     int row;
@@ -101,6 +114,17 @@ void printBoard(void) {
     }
     fprintf(stderr, "[end]\n\n");
 }
+
+void clear(void) {
+    int i;
+    int j;
+
+    for (i = 0; i < HEIGHT; i++) {
+        for (j = 0; j < WIDTH; j++) {
+            board[i][j] = 0;
+        }
+    }
+}
 #endif
 
 int setBackColor(SDL_Renderer *renderer, SDL_Color color)
@@ -112,7 +136,15 @@ int setBackColor(SDL_Renderer *renderer, SDL_Color color)
     return 0;  
 }
 
-/* this function return 1 if it's possible to print the tetrimino and 0 else */
+/**
+ * @brief      Determines ability to print tetrimino
+ *
+ * @param      mat   The matrix of the tetrimino
+ * @param[in]  row   The row of the tetrimino
+ * @param[in]  col   The column of the tetrimino
+ *
+ * @return     1 if able to print, 0 otherwise.
+ */
 int canPrint(char mat[TTM_WIDTH][TTM_WIDTH], int row, int col) {
     int i;
     int j;
@@ -130,6 +162,11 @@ int canPrint(char mat[TTM_WIDTH][TTM_WIDTH], int row, int col) {
     return 1;
 }
 
+/**
+ * @brief      rotate current tetrimino
+ *
+ * @return     0 if current tetrimino successfully rotated, 1 otherwise
+ */
 int rotateCur(void) {
     char tmp[TTM_WIDTH][TTM_WIDTH];
     int i;
@@ -150,8 +187,14 @@ int rotateCur(void) {
     }
 }
 
-/* this function return 1 if the line is whole and 0 else */
-int wholeLine (int row) {
+/**
+ * @brief      determines if line is whole
+ *
+ * @param[in]  row   The line in the board
+ *
+ * @return     1 if the line is whole, 0 otherwise
+ */
+int wholeLine(int row) {
     int i;
 
     for (i = 0; i < WIDTH; i++)
@@ -162,6 +205,11 @@ int wholeLine (int row) {
     return 1;
 }
 
+/**
+ * @brief      change current tetrimino to a random tetrimino
+ *
+ * @return     0 if current tetrimino successfully changed, 1 otherwise
+ */
 int randTtm(void) {
     int choice;
     char (*newTtm)[TTM_WIDTH];
@@ -202,11 +250,10 @@ int randTtm(void) {
         return 1;
     }
     return 0;
-
 }
 
 /**
- * @brief      put a tetrimino in board
+ * @brief      put a tetrimino in the board
  *
  * @param[in]  mat   The matrix of the ttm
  * @param[in]  row   The row in board
@@ -232,20 +279,30 @@ int printTtm(char mat[TTM_WIDTH][TTM_WIDTH], int row, int col) {
     return 0;
 }
 
-int downTtm(void) {
+/**
+ * @brief      down current tetrimino from 1 row
+ */
+void downTtm(void) {
     curTtm.row++;
     if (! canPrint(curTtm.mat, curTtm.row + 1, curTtm.col)) {
         printTtm(curTtm.mat, curTtm.row, curTtm.col);
         curTtm.printed = 1;
     }
-    return 0;
 }
 
+/**
+ * @brief      down current tetrimino at the bottom
+ */
 void fullDownTtm(void) {
     while (curTtm.printed != 1)
         downTtm();
 }
 
+/**
+ * @brief      move current tetrimino to left or right
+ *
+ * @param[in]  direction  The direction
+ */
 void moveTtm(int direction) {
     if (direction == LEFT) {
         if (canPrint(curTtm.mat, curTtm.row, curTtm.col - 1))
@@ -257,17 +314,11 @@ void moveTtm(int direction) {
     }
 }
 
-void clear(void) {
-    int i;
-    int j;
-
-    for (i = 0; i < HEIGHT; i++) {
-        for (j = 0; j < WIDTH; j++) {
-            board[i][j] = 0;
-        }
-    }
-}
-
+/**
+ * @brief      Removes blocks from line and down the above ones
+ *
+ * @param[in]  row   The line
+ */
 void removeLine(int row) {
     int i;
     int j;
@@ -281,10 +332,13 @@ void removeLine(int row) {
     score += 100;
 }
 
-/*
-@brief remove everything from sreen, refresh with content of \a board array,
-show curTtm (at right place)
-*/
+/**
+ * @brief      refresh screen
+ * 
+ * @details
+ * remove everything from screen, refresh with content of @a board matrix,
+ * put current tetrimino at right place
+ */
 void refreshScreen(void) {
     int i;
     int j;
@@ -315,7 +369,10 @@ void refreshScreen(void) {
     SDL_RenderPresent(renderer);
 }
 
-int game(void) {
+/**
+ * @brief      the place that contains game loop
+ */
+void game(void) {
     int i;
     short timer;
     int actions[1000];
