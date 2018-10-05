@@ -2,7 +2,7 @@
 
 This project is a simple implementation of the Tetris famous game. 
 I've made it mainly for learning purpose. I don't think that you
-will find pleasure playing with it, but if you are a developer, you
+will take pleasure playing with it, but if you are a developer, you
 can read the source code which is documented. Hope you will find it interesting!
 
 You can access to the documentation here:
