@@ -38,4 +38,4 @@ Here are some details:
 - Installation with a Makefile
 - Very fluid and reactive
 - Show score at the end of game
-- Only about 20 KB after complication
+- Only about 20 KB after compilation
