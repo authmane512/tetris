@@ -436,8 +436,6 @@ void game(void) {
         sprintf(msg, "your score: %li", score);
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Game Over!", msg, NULL);
     }
-
-    return;
 }
 
 int init(SDL_Window *window) {
